@@ -1,22 +1,24 @@
 package io.rsbox.mapper.gui.model
 
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.property.SimpleStringProperty
-import tornadofx.ItemViewModel
-import java.io.File
+import tornadofx.getProperty
+import tornadofx.property
 
-data class Project(
-    val name: String,
-    val mappedRevision: String,
-    val targetRevision: String,
-    val mappedJar: File,
-    val targetJar: File
-)
+class ProjectModel {
+    /**
+     * Project Name
+     */
+    var name by property<String>()
+    fun nameProperty() = getProperty(ProjectModel::name)
 
-class ProjectModel : ItemViewModel<Project>() {
-    val name = bind { SimpleStringProperty(item.name) }
-    val mappedRevision = bind { SimpleStringProperty(item.mappedRevision) }
-    val targetRevision = bind { SimpleStringProperty(item.targetRevision) }
-    val mappedJar = bind { SimpleObjectProperty<File>(item.mappedJar) }
-    val targetJar = bind { SimpleObjectProperty<File>(item.targetJar) }
+    /**
+     * Mapped Jar
+     */
+    var mappedJarPath by property<String>()
+    fun mappedJarPathProperty() = getProperty(ProjectModel::mappedJarPath)
+
+    /**
+     * Target Jar
+     */
+    var targetJarPath by property<String>()
+    fun targetJarPathProperty() = getProperty(ProjectModel::targetJarPath)
 }
