@@ -9,4 +9,5 @@ javafx {
 
 dependencies {
     implementation(Library.tornadofx)
+    api(project(":mapper"))
 }

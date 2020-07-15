@@ -15,9 +15,14 @@ object Library {
     private object Version {
         const val tinylog = "2.1.2"
         const val tornadofx = "1.7.20"
+        const val asm = "8.0.1"
     }
 
     const val tinylogApi = "org.tinylog:tinylog-api-kotlin:${Version.tinylog}"
     const val tinylogImpl = "org.tinylog:tinylog-impl:${Version.tinylog}"
     const val tornadofx = "no.tornado:tornadofx:${Version.tornadofx}"
+    const val asm = "org.ow2.asm:asm:${Version.asm}"
+    const val asmCommons = "org.ow2.asm:asm-commons:${Version.asm}"
+    const val asmUtil = "org.ow2.asm:asm-util:${Version.asm}"
+    const val asmTree = "org.ow2.asm:asm-tree:${Version.asm}"
 }
