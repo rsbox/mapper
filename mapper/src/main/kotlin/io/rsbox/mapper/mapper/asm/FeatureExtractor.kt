@@ -124,8 +124,6 @@ class FeatureExtractor(val group: ClassGroup) {
                     dst.owner.methodTypeRefs.add(method)
                     method.classRefs.add(dst.owner)
                 }
-
-
             }
         }
     }
