@@ -1,5 +1,6 @@
 package io.rsbox.mapper.mapper.asm
 
+import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.FieldNode
 
@@ -20,9 +21,8 @@ class Field(val group: ClassGroup, val owner: Class, val node: FieldNode) {
      * Reference sets
      */
 
-    val readRefs = hashSetOf<Method>()
-
-    val writeRefs = hashSetOf<Method>()
+    val readRefs = newIdentityHashSet<Method>()
+    val writeRefs = newIdentityHashSet<Method>()
 
     /**
      * Utility methods / fields

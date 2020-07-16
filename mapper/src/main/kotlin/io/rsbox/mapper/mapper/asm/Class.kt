@@ -1,5 +1,6 @@
 package io.rsbox.mapper.mapper.asm
 
+import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
 import org.objectweb.asm.Opcodes.ACC_ENUM
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
@@ -22,14 +23,13 @@ class Class(val group: ClassGroup, val node: ClassNode) {
     var parent: Class? = null
         set(value) {
             field = value
-            value!!.children.add(this)
+            value!!.children
         }
 
-    val children = hashSetOf<Class>()
+    val children = newIdentityHashSet<Class>()
 
-    val interfaces = hashSetOf<Class>()
-
-    val implementers = hashSetOf<Class>()
+    val interfaces = newIdentityHashSet<Class>()
+    val implementers = newIdentityHashSet<Class>()
 
     /**
      * Entry nodes
@@ -38,6 +38,13 @@ class Class(val group: ClassGroup, val node: ClassNode) {
     val methods = node.methods.map { Method(group, this, it) }
 
     val fields = node.fields.map { Field(group, this, it) }
+
+    /**
+     * Reference sets
+     */
+
+    val methodTypeRefs = newIdentityHashSet<Method>()
+    val fieldTypeRefs = newIdentityHashSet<Field>()
 
     /**
      * Utility fields

@@ -1,5 +1,6 @@
 package io.rsbox.mapper.mapper.asm
 
+import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.MethodNode
 
@@ -31,15 +32,13 @@ class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) {
      * Reference sets
      */
 
-    val refsIn = hashSetOf<Method>()
+    val refsIn = newIdentityHashSet<Method>()
+    val refsOut = newIdentityHashSet<Method>()
 
-    val refsOut = hashSetOf<Method>()
+    val fieldReadRefs = newIdentityHashSet<Field>()
+    val fieldWriteRefs = newIdentityHashSet<Field>()
 
-    val fieldReadRefs = hashSetOf<Field>()
-
-    val fieldWriteRefs = hashSetOf<Field>()
-
-    val classRefs = hashSetOf<Class>()
+    val classRefs = newIdentityHashSet<Class>()
 
     override fun toString(): String = "${owner.name}.$name$desc"
 }

@@ -114,9 +114,18 @@ class FeatureExtractor(val group: ClassGroup) {
                     }
 
                     if(insn.opcode == GETSTATIC || insn.opcode == GETFIELD) {
-                        dst.
+                        dst.readRefs.add(method)
+                        method.fieldReadRefs.add(dst)
+                    } else {
+                        dst.writeRefs.add(method)
+                        method.fieldWriteRefs.add(dst)
                     }
+
+                    dst.owner.methodTypeRefs.add(method)
+                    method.classRefs.add(dst.owner)
                 }
+
+
             }
         }
     }
