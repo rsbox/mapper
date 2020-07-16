@@ -106,7 +106,7 @@ class FeatureExtractor(val group: ClassGroup) {
                 FIELD_INSN -> {
                     val insn = instruction as FieldInsnNode
                     val owner = group[insn.owner] ?: return
-                    val dst = owner.fields.firstOrNull { it.name == insn.name && it.desc == insn.desc }
+                    val dst = owner.resolveField(insn.name, insn.desc)
 
                     if(dst == null) {
                         Logger.info("Method $method invoked field ${insn.name} but was not found in class $owner.")
