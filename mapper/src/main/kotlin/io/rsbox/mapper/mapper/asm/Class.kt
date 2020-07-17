@@ -9,9 +9,11 @@ import java.util.ArrayDeque
 /**
  * Represents an ASM class node.
  */
-class Class(val group: ClassGroup, val node: ClassNode) : Node {
+class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), Node {
 
-    override val name get() = node.name
+    override val self = this
+
+    val name get() = node.name
 
     val superName get() = node.superName
 

@@ -54,7 +54,7 @@ class MapperView : View("RSBox Mapper") {
          * Source matching lists
          */
         left = splitpane(Orientation.VERTICAL) {
-            prefWidth = 150.0
+            prefWidth = 200.0
 
             /**
              * Class List
@@ -110,6 +110,10 @@ class MapperView : View("RSBox Mapper") {
 
             setDividerPositions(0.6, 0.8)
         }
+
+        /**
+         * Matchable list
+         */
     }
 
     init {

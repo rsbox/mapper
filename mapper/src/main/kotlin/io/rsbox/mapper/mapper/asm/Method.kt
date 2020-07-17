@@ -7,9 +7,11 @@ import org.objectweb.asm.tree.MethodNode
 /**
  * Represents a Method ASM node.
  */
-class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) : Node {
+class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) : Matchable<Method>(), Node {
 
-    override val name get() = node.name
+    override val self = this
+
+    val name get() = node.name
 
     val desc get() = node.desc
 

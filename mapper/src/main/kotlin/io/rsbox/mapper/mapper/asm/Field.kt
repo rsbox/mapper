@@ -7,9 +7,11 @@ import org.objectweb.asm.tree.FieldNode
 /**
  * Represents an ASM field node.
  */
-class Field(val group: ClassGroup, val owner: Class, val node: FieldNode) : Node {
+class Field(val group: ClassGroup, val owner: Class, val node: FieldNode) : Matchable<Field>(), Node {
 
-    override val name get() = node.name
+    override val self = this
+
+    val name get() = node.name
 
     val desc get() = node.desc
 
