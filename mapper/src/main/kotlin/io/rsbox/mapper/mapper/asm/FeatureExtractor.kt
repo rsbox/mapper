@@ -1,11 +1,13 @@
 package io.rsbox.mapper.mapper.asm
 
 import io.rsbox.mapper.mapper.asm.ext.isCallToInterface
+import org.objectweb.asm.Handle
 import org.objectweb.asm.Opcodes.*
-import org.objectweb.asm.tree.AbstractInsnNode.FIELD_INSN
-import org.objectweb.asm.tree.AbstractInsnNode.METHOD_INSN
+import org.objectweb.asm.tree.AbstractInsnNode.*
 import org.objectweb.asm.tree.FieldInsnNode
+import org.objectweb.asm.tree.InvokeDynamicInsnNode
 import org.objectweb.asm.tree.MethodInsnNode
+import org.objectweb.asm.tree.TypeInsnNode
 import org.tinylog.kotlin.Logger
 
 /**
@@ -124,6 +126,36 @@ class FeatureExtractor(val group: ClassGroup) {
                     dst.owner.methodTypeRefs.add(method)
                     method.classRefs.add(dst.owner)
                 }
+
+                /**
+                 * TYPE INVOKE INSTRUCTION
+                 */
+                TYPE_INSN -> {
+                    val insn = instruction as TypeInsnNode
+                    val dst = group[insn.desc] ?: return
+
+                    dst.methodTypeRefs.add(method)
+                    method.classRefs.add(dst)
+                }
+
+                /**
+                 * INVOKE DYNAMIC INSTRUCTION
+                 */
+                INVOKE_DYNAMIC_INSN -> {
+                    val insn = instruction as InvokeDynamicInsnNode
+                    val impl: Handle = insn.bsmArgs[1] as Handle? ?: return
+
+                    when(impl.tag) {
+                        H_INVOKEVIRTUAL, H_INVOKESTATIC, H_INVOKESPECIAL, H_INVOKEINTERFACE -> {
+                            processMethodInvocation(method, impl.owner, impl.name, impl.desc,
+                                impl.isInterface,  impl.tag == H_INVOKESTATIC)
+                        }
+
+                        else -> {
+                            Logger.info("Unexpected impl tag: ${impl.tag}")
+                        }
+                    }
+                }
             }
         }
     }
@@ -132,6 +164,13 @@ class FeatureExtractor(val group: ClassGroup) {
      * Process method invocation instructions
      */
     private fun processMethodInvocation(method: Method, owner: String, name: String, desc: String, toInterface: Boolean, isStatic: Boolean) {
+        val ownerClass = group[owner] ?: return
+        val dst = ownerClass.resolveMethod(name, desc, toInterface) ?: return
 
+        dst.refsIn.add(method)
+        method.refsOut.add(dst)
+
+        dst.owner.methodTypeRefs.add(method)
+        method.classRefs.add(dst.owner)
     }
 }
