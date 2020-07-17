@@ -53,7 +53,7 @@ class FeatureExtractor(val group: ClassGroup) {
          * Set parent / super class hierarchy
          */
         if(group[clazz.superName] != null) {
-            clazz.parent = group[clazz.superName]
+            clazz.setParent(group[clazz.superName]!!)
         }
 
         /**

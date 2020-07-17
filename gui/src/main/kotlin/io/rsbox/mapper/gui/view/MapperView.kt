@@ -1,5 +1,6 @@
 package io.rsbox.mapper.gui.view
 
+import io.rsbox.mapper.gui.NodeSelectionModel
 import io.rsbox.mapper.gui.controller.MapperController
 import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.event.ProjectCreationEvent
@@ -7,7 +8,6 @@ import io.rsbox.mapper.mapper.asm.Class
 import io.rsbox.mapper.mapper.asm.Field
 import io.rsbox.mapper.mapper.asm.Method
 import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
 import javafx.geometry.Orientation
 import javafx.scene.control.SelectionMode
 import org.tinylog.kotlin.Logger
@@ -24,10 +24,8 @@ class MapperView : View("RSBox Mapper") {
      */
     private val mapperController: MapperController by inject()
 
-    /**
-     * The selected mapped class
-     */
-    private var selectedMappedClass = SimpleObjectProperty<Class>()
+    internal val mappedSelection = NodeSelectionModel()
+    internal val targetSelection = NodeSelectionModel()
 
     override val root = borderpane {
         setPrefSize(1280.0, 900.0)
@@ -66,7 +64,7 @@ class MapperView : View("RSBox Mapper") {
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
 
-                bindSelected(selectedMappedClass)
+                bindSelected(mappedSelection.selectedClass)
 
                 subscribe<MapperLoadEvent> { e ->
                     items.setAll(e.mapper.mappedGroup.classes)
@@ -83,7 +81,7 @@ class MapperView : View("RSBox Mapper") {
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
 
-                selectedMappedClass.onChange {
+                mappedSelection.selectedClass.onChange {
                     if(it != null) {
                         items.setAll(it.methods)
                     }
@@ -101,7 +99,7 @@ class MapperView : View("RSBox Mapper") {
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
 
-                selectedMappedClass.onChange {
+                mappedSelection.selectedClass.onChange {
                     if(it != null) {
                         items.setAll(it.fields)
                     }
@@ -109,6 +107,16 @@ class MapperView : View("RSBox Mapper") {
             }
 
             setDividerPositions(0.6, 0.8)
+        }
+
+        /**
+         * Content Pane
+         */
+        center = splitpane(Orientation.HORIZONTAL) {
+            add(ContentView(mappedSelection).root)
+            add(ContentView(targetSelection).root)
+
+            setDividerPositions(0.5)
         }
 
         /**

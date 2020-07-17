@@ -10,4 +10,8 @@ javafx {
 dependencies {
     implementation(Library.tornadofx)
     api(project(":mapper"))
+    api(Library.asm)
+    api(Library.asmCommons)
+    api(Library.asmUtil)
+    api(Library.asmTree)
 }

@@ -24,10 +24,7 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
     val access get() = node.access
 
     var parent: Class? = null
-        set(value) {
-            field = value
-            value!!.children
-        }
+        private set
 
     val children = newIdentityHashSet<Class>()
 
@@ -56,14 +53,17 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
     val isNameObfuscated: Boolean get() =
         (name.length <= 2 || (name.startsWith("aa") && name.length == 3))
 
-    val isEnum get() = (node.access and ACC_ENUM) != 0
-
     fun getMethod(name: String, desc: String): Method? {
         return methods.firstOrNull { it.name == name && it.desc == desc }
     }
 
     fun getField(name: String, desc: String): Field? {
         return fields.firstOrNull { it.name == name && it.desc == desc }
+    }
+
+    fun setParent(clazz: Class) {
+        parent = clazz
+        clazz.children.add(this)
     }
 
     /**
