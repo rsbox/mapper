@@ -45,6 +45,9 @@ class ClassInfoTab(private val pane: TabPane, private val selectedClass: SimpleO
         infoEntryList.add(InfoEntry("Type", clazz.type.toString()))
         infoEntryList.add(InfoEntry("Ref Methods", clazz.methodTypeRefs.joinToString { "\n" + it.owner.name + "." + it.name}))
         infoEntryList.add(InfoEntry("Ref Fields", clazz.fieldTypeRefs.joinToString { "\n" + it.owner.name + "." + it.name }))
+        infoEntryList.add(InfoEntry("Outer Class", clazz.outerClass?.toString() ?: ""))
+        infoEntryList.add(InfoEntry("Inner Classes", clazz.innerClasses.joinToString { "\n" + it.name }))
+        infoEntryList.add(InfoEntry("Strings", clazz.strings.joinToString { "\n" + it }))
     }
 
     internal class InfoEntry(name: String, value: String) {

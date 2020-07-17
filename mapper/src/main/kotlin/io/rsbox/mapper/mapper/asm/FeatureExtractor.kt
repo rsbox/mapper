@@ -45,19 +45,13 @@ class FeatureExtractor(val group: ClassGroup) {
          * Extract class strings.
          */
 
-        val strings = clazz.strings
-
         clazz.methods.forEach { m ->
-            if(clazz.getMethod(m.name, m.desc) == null) {
-                ClassifierUtil.extractStrings(m.node.instructions, strings)
-            }
+            ClassifierUtil.extractStrings(m.node.instructions, clazz.strings)
         }
 
         clazz.fields.forEach { f ->
-            if(clazz.getField(f.name, f.desc) == null) {
-                if(f.node.value is String) {
-                    strings.add(f.node.value as String)
-                }
+            if(f.node.value is String) {
+                clazz.strings.add(f.node.value as String)
             }
         }
 
