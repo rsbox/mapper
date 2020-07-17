@@ -1,5 +1,6 @@
 package io.rsbox.mapper.gui.controller
 
+import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.model.ProjectModel
 import io.rsbox.mapper.mapper.Mapper
 import org.tinylog.kotlin.Logger
@@ -27,5 +28,10 @@ class MapperController : Controller() {
          */
         mapper.loadMappedJar(File(project.mappedJarPath))
         mapper.loadTargetJar(File(project.targetJarPath))
+
+        /**
+         * Fire the mapper loaded event
+         */
+        fire(MapperLoadEvent(mapper))
     }
 }

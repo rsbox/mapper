@@ -1,7 +1,15 @@
 package io.rsbox.mapper.gui.view
 
 import io.rsbox.mapper.gui.controller.MapperController
+import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.event.ProjectCreationEvent
+import io.rsbox.mapper.mapper.asm.Class
+import io.rsbox.mapper.mapper.asm.Field
+import io.rsbox.mapper.mapper.asm.Method
+import javafx.beans.property.SimpleObjectProperty
+import javafx.collections.FXCollections
+import javafx.geometry.Orientation
+import javafx.scene.control.SelectionMode
 import org.tinylog.kotlin.Logger
 import tornadofx.*
 import kotlin.system.exitProcess
@@ -15,6 +23,11 @@ class MapperView : View("RSBox Mapper") {
      * The injected mapper controller instance
      */
     private val mapperController: MapperController by inject()
+
+    /**
+     * The selected mapped class
+     */
+    private var selectedMappedClass = SimpleObjectProperty<Class>()
 
     override val root = borderpane {
         setPrefSize(1280.0, 900.0)
@@ -35,6 +48,67 @@ class MapperView : View("RSBox Mapper") {
                 separator()
                 item("Exit").action { exitProcess(0) }
             }
+        }
+
+        /**
+         * Source matching lists
+         */
+        left = splitpane(Orientation.VERTICAL) {
+            prefWidth = 150.0
+
+            /**
+             * Class List
+             */
+            listview<Class> {
+                cellFormat {
+                    text = it.name
+                }
+
+                selectionModel.selectionMode = SelectionMode.SINGLE
+
+                bindSelected(selectedMappedClass)
+
+                subscribe<MapperLoadEvent> { e ->
+                    items.setAll(e.mapper.mappedGroup.classes)
+                }
+            }
+
+            /**
+             * Method List
+             */
+            listview<Method> {
+                cellFormat {
+                    text = it.name
+                }
+
+                selectionModel.selectionMode = SelectionMode.SINGLE
+
+                selectedMappedClass.onChange {
+                    if(it != null) {
+                        items.setAll(it.methods)
+                    }
+                }
+
+            }
+
+            /**
+             * Field List
+             */
+            listview<Field> {
+                cellFormat {
+                    text = it.name
+                }
+
+                selectionModel.selectionMode = SelectionMode.SINGLE
+
+                selectedMappedClass.onChange {
+                    if(it != null) {
+                        items.setAll(it.fields)
+                    }
+                }
+            }
+
+            setDividerPositions(0.6, 0.8)
         }
     }
 
