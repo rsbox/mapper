@@ -46,6 +46,11 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
     val methodTypeRefs = newIdentityHashSet<Method>()
     val fieldTypeRefs = newIdentityHashSet<Field>()
 
+    val strings = hashSetOf<String>()
+
+    var outerClass: Class? = null
+    val innerClasses = newIdentityHashSet<Class>()
+
     /**
      * Utility fields
      */

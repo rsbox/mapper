@@ -1,13 +1,11 @@
 package io.rsbox.mapper.mapper.asm
 
 import io.rsbox.mapper.mapper.asm.ext.isCallToInterface
+import io.rsbox.mapper.mapper.classifier.ClassifierUtil
 import org.objectweb.asm.Handle
 import org.objectweb.asm.Opcodes.*
+import org.objectweb.asm.tree.*
 import org.objectweb.asm.tree.AbstractInsnNode.*
-import org.objectweb.asm.tree.FieldInsnNode
-import org.objectweb.asm.tree.InvokeDynamicInsnNode
-import org.objectweb.asm.tree.MethodInsnNode
-import org.objectweb.asm.tree.TypeInsnNode
 import org.tinylog.kotlin.Logger
 
 /**
@@ -43,11 +41,31 @@ class FeatureExtractor(val group: ClassGroup) {
     private fun extractClassFeatures(clazz: Class) {
         // TODO Extract Class signature
 
-        // TODO Extract Method Strings
+        /**
+         * Extract class strings.
+         */
 
-        // TODO Extract Field Strings
+        val strings = clazz.strings
 
-        // TODO Extract outer class
+        clazz.methods.forEach { m ->
+            if(clazz.getMethod(m.name, m.desc) == null) {
+                ClassifierUtil.extractStrings(m.node.instructions, strings)
+            }
+        }
+
+        clazz.fields.forEach { f ->
+            if(clazz.getField(f.name, f.desc) == null) {
+                if(f.node.value is String) {
+                    strings.add(f.node.value as String)
+                }
+            }
+        }
+
+        /**
+         * Extract out class refs.
+         */
+
+        if(clazz.outerClass == null) detectOuterClass(clazz, clazz.node)
 
         /**
          * Set parent / super class hierarchy
@@ -172,5 +190,32 @@ class FeatureExtractor(val group: ClassGroup) {
 
         dst.owner.methodTypeRefs.add(method)
         method.classRefs.add(dst.owner)
+    }
+
+    private fun detectOuterClass(clazz: Class, node: ClassNode) {
+        if(node.outerClass != null) {
+            addOuterClass(clazz, node.outerClass)
+        } else if(node.outerMethod != null) {
+            throw UnsupportedOperationException()
+        } else {
+            node.innerClasses.forEach { ic ->
+                if(ic.name == node.name) {
+                    addOuterClass(clazz, ic.outerName)
+                    return
+                }
+            }
+
+            val pos = node.name.lastIndexOf("$")
+            if(pos > 0 && pos < node.name.length - 1) {
+                addOuterClass(clazz, node.name.substring(0, pos))
+            }
+        }
+    }
+
+    private fun addOuterClass(clazz: Class, name: String) {
+        val outerClass = group[name] ?: return
+
+        clazz.outerClass = outerClass
+        outerClass.innerClasses.add(clazz)
     }
 }
