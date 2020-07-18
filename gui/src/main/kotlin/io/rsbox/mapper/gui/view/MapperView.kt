@@ -1,6 +1,7 @@
 package io.rsbox.mapper.gui.view
 
 import io.rsbox.mapper.gui.NodeSelectionModel
+import io.rsbox.mapper.gui.Styles
 import io.rsbox.mapper.gui.controller.MapperController
 import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.event.ProjectCreationEvent
@@ -58,6 +59,7 @@ class MapperView : View("RSBox Mapper") {
              * Class List
              */
             listview<Class> {
+                addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
                 }
@@ -75,11 +77,14 @@ class MapperView : View("RSBox Mapper") {
              * Method List
              */
             listview<Method> {
+                addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
                 }
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
+
+                bindSelected(mappedSelection.selectedMethod)
 
                 mappedSelection.selectedClass.onChange {
                     if(it != null) {
@@ -93,11 +98,14 @@ class MapperView : View("RSBox Mapper") {
              * Field List
              */
             listview<Field> {
+                addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
                 }
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
+
+                bindSelected(mappedSelection.selectedField)
 
                 mappedSelection.selectedClass.onChange {
                     if(it != null) {

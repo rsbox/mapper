@@ -9,6 +9,7 @@ javafx {
 
 dependencies {
     implementation(Library.tornadofx)
+    implementation(Library.javaparser)
     api(project(":mapper"))
     api(Library.asm)
     api(Library.asmCommons)

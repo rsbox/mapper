@@ -1,6 +1,6 @@
 package io.rsbox.mapper.gui.view.tab
 
-import io.rsbox.mapper.gui.HtmlUtil
+import io.rsbox.mapper.gui.util.HtmlUtil
 import io.rsbox.mapper.gui.NodeSelectionModel
 import io.rsbox.mapper.mapper.asm.Class
 import io.rsbox.mapper.mapper.decompile.CfrDecompiler
@@ -16,7 +16,7 @@ import java.util.ArrayDeque
 class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
 
     private val webview = WebView()
-    private val taskQueue = ArrayDeque<Runnable>()
+    private val taskQueue = ArrayDeque<() -> Unit>()
 
     /**
      * Template HTML string.
@@ -37,7 +37,7 @@ class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
                 var r = taskQueue.poll()
 
                 while(r != null) {
-                    r.run()
+                    r()
                     r = taskQueue.poll()
                 }
             }
@@ -48,6 +48,18 @@ class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
         selectionModel.selectedClass.onChange {
             if(it != null) update(it)
         }
+
+        selectionModel.selectedMethod.onChange {
+            if(it != null) jumpTo(it.name)
+        }
+
+        selectionModel.selectedField.onChange {
+            if(it != null) jumpTo(it.name)
+        }
+    }
+
+    private fun jumpTo(anchor: String) {
+        queueTask { webview.engine.executeScript("$(window).scrollTop($(\"span:contains('$anchor'):first\").offset().top)") }
     }
 
     private fun update(clazz: Class) {
@@ -60,7 +72,7 @@ class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
 
         asyncTask.whenComplete { _, _ ->
             displayHtml(text)
-            queueTask { webview.engine.executeScript("document.body.scrollTop = 0") as Runnable }
+            queueTask { webview.engine.executeScript("document.body.scrollTop = 0") }
         }
     }
 
@@ -72,11 +84,11 @@ class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
         webview.engine.loadContent(template.replace("%text%", html))
     }
 
-    private fun queueTask(task: () -> Runnable) {
+    private fun queueTask(task: () -> Unit) {
         if(webview.engine.loadWorker.state == Worker.State.SUCCEEDED) {
-            task().run()
+            task()
         } else {
-            taskQueue.add(task())
+            taskQueue.add(task)
         }
     }
 }

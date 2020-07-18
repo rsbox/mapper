@@ -1,4 +1,4 @@
-package io.rsbox.mapper.gui
+package io.rsbox.mapper.gui.util
 
 import io.rsbox.mapper.mapper.asm.Field
 import io.rsbox.mapper.mapper.asm.Method

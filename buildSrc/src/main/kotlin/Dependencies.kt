@@ -18,6 +18,7 @@ object Library {
         const val asm = "8.0.1"
         const val coroutines = "1.3.8"
         const val cfr = "0.150"
+        const val javaparser = "3.16.1"
     }
 
     const val tinylogApi = "org.tinylog:tinylog-api-kotlin:${Version.tinylog}"
@@ -29,4 +30,5 @@ object Library {
     const val asmTree = "org.ow2.asm:asm-tree:${Version.asm}"
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
     const val cfr = "org.benf:cfr:${Version.cfr}"
+    const val javaparser = "com.github.javaparser:javaparser-symbol-solver-core:${Version.javaparser}"
 }
