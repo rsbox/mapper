@@ -1,6 +1,7 @@
 package io.rsbox.mapper.mapper.asm
 
 import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
+import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
@@ -69,6 +70,13 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
     fun setParent(clazz: Class) {
         parent = clazz
         clazz.children.add(this)
+    }
+
+    fun serialize(): ByteArray {
+        val writer = ClassWriter(0)
+        node.accept(writer)
+
+        return writer.toByteArray()
     }
 
     /**

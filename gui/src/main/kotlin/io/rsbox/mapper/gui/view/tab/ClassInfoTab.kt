@@ -1,7 +1,7 @@
 package io.rsbox.mapper.gui.view.tab
 
+import io.rsbox.mapper.gui.NodeSelectionModel
 import io.rsbox.mapper.mapper.asm.Class
-import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.control.TabPane
@@ -11,7 +11,7 @@ import tornadofx.onChange
 import tornadofx.tab
 import tornadofx.tableview
 
-class ClassInfoTab(private val pane: TabPane, private val selectedClass: SimpleObjectProperty<Class>) {
+class ClassInfoTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
 
     private val infoEntryList = FXCollections.observableArrayList<InfoEntry>()
 
@@ -25,7 +25,7 @@ class ClassInfoTab(private val pane: TabPane, private val selectedClass: SimpleO
             columnResizePolicy = TableView.CONSTRAINED_RESIZE_POLICY
         }
 
-        selectedClass.onChange {
+        selectionModel.selectedClass.onChange {
             if(it == null) {
                 infoEntryList.clear()
             } else {

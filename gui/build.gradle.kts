@@ -4,7 +4,7 @@ plugins {
 
 javafx {
     version = "11"
-    modules = listOf("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing")
+    modules = listOf("javafx.controls", "javafx.graphics", "javafx.base", "javafx.swing", "javafx.web")
 }
 
 dependencies {

@@ -2,6 +2,7 @@ package io.rsbox.mapper.mapper
 
 import io.rsbox.mapper.mapper.asm.ClassGroup
 import io.rsbox.mapper.mapper.asm.FeatureExtractor
+import io.rsbox.mapper.mapper.decompile.CfrDecompiler
 import org.tinylog.kotlin.Logger
 import java.io.File
 
