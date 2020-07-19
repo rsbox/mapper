@@ -11,6 +11,7 @@ import io.rsbox.mapper.mapper.asm.Method
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
 import javafx.scene.control.SelectionMode
+import javafx.scene.paint.Color
 import org.tinylog.kotlin.Logger
 import tornadofx.*
 import kotlin.system.exitProcess
@@ -62,6 +63,11 @@ class MapperView : View("RSBox Mapper") {
                 addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
+
+                    textFill = when(it.hasMatch) {
+                        false -> Color.rgb(236, 82, 82)
+                        true -> Color.rgb(93, 167, 19)
+                    }
                 }
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
@@ -80,6 +86,11 @@ class MapperView : View("RSBox Mapper") {
                 addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
+
+                    textFill = when(it.hasMatch) {
+                        false -> Color.rgb(236, 82, 82)
+                        true -> Color.rgb(93, 167, 19)
+                    }
                 }
 
                 selectionModel.selectionMode = SelectionMode.SINGLE
@@ -101,6 +112,11 @@ class MapperView : View("RSBox Mapper") {
                 addClass(Styles.whiteDarkText)
                 cellFormat {
                     text = it.name
+
+                    textFill = when(it.hasMatch) {
+                        false -> Color.rgb(236, 82, 82)
+                        true -> Color.rgb(93, 167, 19)
+                    }
                 }
 
                 selectionModel.selectionMode = SelectionMode.SINGLE

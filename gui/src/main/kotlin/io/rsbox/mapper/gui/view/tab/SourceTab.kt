@@ -59,7 +59,7 @@ class SourceTab(pane: TabPane, private val selectionModel: NodeSelectionModel) {
     }
 
     private fun jumpTo(anchor: String) {
-        queueTask { webview.engine.executeScript("$(window).scrollTop($(\"span:contains('$anchor'):first\").offset().top)") }
+        queueTask { webview.engine.executeScript("$(window).scrollTop($(\"*:contains('$anchor'):first\").offset().top)") }
     }
 
     private fun update(clazz: Class) {

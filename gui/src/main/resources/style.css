@@ -41,6 +41,10 @@
     -fx-text-fill: -white-dark;
 }
 
+.text {
+    -fx-text-fill: -white;
+}
+
 .menu-bar {
     -fx-background-color: -black-dark;
 }
