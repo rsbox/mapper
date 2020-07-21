@@ -1,5 +1,10 @@
 plugins {
+    id("com.github.johnrengelman.shadow") version Plugin.shadowjar
     application
+}
+
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    archiveName = "mapper.jar"
 }
 
 application {

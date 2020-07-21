@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
 /**
  * The primary GUI FX view.
  */
-class MapperView : View("RSBox Mapper") {
+class MapperView : View("Mapper") {
 
     /**
      * The injected mapper controller instance

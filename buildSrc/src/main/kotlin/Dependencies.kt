@@ -9,6 +9,7 @@ object Project {
 
 object Plugin {
     const val openjfx = "0.0.9"
+    const val shadowjar = "6.0.0"
 }
 
 object Library {
@@ -19,6 +20,7 @@ object Library {
         const val coroutines = "1.3.8"
         const val cfr = "0.150"
         const val javaparser = "3.16.1"
+        const val framefx = "1.1.0"
     }
 
     const val tinylogApi = "org.tinylog:tinylog-api-kotlin:${Version.tinylog}"
@@ -31,4 +33,5 @@ object Library {
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.coroutines}"
     const val cfr = "org.benf:cfr:${Version.cfr}"
     const val javaparser = "com.github.javaparser:javaparser-symbol-solver-core:${Version.javaparser}"
+    const val fxframe = "io.rsbox:fxframe:${Version.framefx}"
 }

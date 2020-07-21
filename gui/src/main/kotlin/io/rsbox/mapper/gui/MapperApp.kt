@@ -1,16 +1,18 @@
 package io.rsbox.mapper.gui
 
+import io.rsbox.fxframe.FXFrameApp
+import io.rsbox.fxframe.FXFrameSkin
 import io.rsbox.mapper.gui.view.MapperView
 import javafx.scene.image.Image
-import tornadofx.App
-import tornadofx.importStylesheet
-import tornadofx.launch
-import tornadofx.setStageIcon
+import tornadofx.*
 
-class MapperApp : App(MapperView::class, Styles::class) {
+class MapperApp : FXFrameApp() {
+
+    override val skin = FXFrameSkin.ARCDARK
+    override val view = find<MapperView>()
 
     init {
-        setStageIcon(Image("/icon.png"))
+        setFXFrameIcon(Image("/icon.png"))
         importStylesheet("/style.css")
     }
 

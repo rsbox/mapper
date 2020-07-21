@@ -16,6 +16,8 @@ allprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
+
+        maven(url = "https://dl.bintray.com/rsbox/fxframe")
     }
 
     dependencies {

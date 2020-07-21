@@ -2,6 +2,7 @@ package io.rsbox.mapper.gui.controller
 
 import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.model.ProjectModel
+import io.rsbox.mapper.gui.view.MapperView
 import io.rsbox.mapper.mapper.Mapper
 import org.tinylog.kotlin.Logger
 import tornadofx.Controller
@@ -17,6 +18,8 @@ class MapperController : Controller() {
      */
     val mapper = Mapper()
 
+    private val mapperView: MapperView by inject()
+
     /**
      * Create an load the mapper instance.
      */
@@ -28,6 +31,8 @@ class MapperController : Controller() {
          */
         mapper.loadMappedJar(File(project.mappedJarPath))
         mapper.loadTargetJar(File(project.targetJarPath))
+
+        mapperView.title = "Mapper - ${project.name}"
 
         /**
          * Fire the mapper loaded event
