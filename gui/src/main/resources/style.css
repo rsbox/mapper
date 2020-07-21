@@ -1,0 +1,99 @@
+/**
+ * RSBox JavaFX CSS
+ * Copyright 2020
+
+ * @author Kyle Escobar
+ */
+
+{
+    -black-dark: #141A1F;
+    -black: #1A2128;
+    -black-light: #28343E;
+    -white-dark: #6B859E;
+    -white: #A6B5C5;
+    -blue-dark: #3890E9;
+    -blue: #7DBEFF;
+    -purple-dark: #A359ED;
+    -purple: #CB96FF;
+    -red-dark: #EC5252;
+    -red: #FF9191;
+    -orange-dark: #C97016;
+    -orange: #EDA55D;
+    -green-dark: #5DA713;
+    -green: #9ACD68;
+    -aqua-dark: #13AFAF;
+    -aqua: #6ECFCF;
+}
+
+.root {
+    -fx-base: -black;
+    -fx-accent: -black-light;
+    -fx-focus-color: -white-dark;
+    -fx-control-inner-background: -black;
+    -fx-control-inner-background-alt: -fx-control-inner-background;
+    -fx-background-color: -black;
+    -fx-background: -black;
+    -fx-text-fill: -white-dark;
+    -fx-text-inner-color: -white-dark;
+}
+
+.label {
+    -fx-text-fill: -white-dark;
+}
+
+.text {
+    -fx-text-fill: -white;
+}
+
+.menu-bar {
+    -fx-background-color: -black-dark;
+}
+
+.tab {
+    -fx-background-color: -black-light;
+    -fx-text-fill: -white-dark;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: derive(-black-dark, 5%);
+    -fx-effect: innershadow(two-pass-box, rgb(24, 31, 37), 4, 0.0, 0, 0)
+}
+
+.table-row-cell:filled:selected:focused, .table-row-cell:filled:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+    -fx-text-fill: -white;
+}
+
+.table-row-cell:filled .table-cell:selected:focused,  .table-row-cell:filled .table-cell:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+    -fx-text-fill: -white;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-table-cell-border-color, derive(-fx-control-inner-background,-5%);
+    -fx-background-insets: 0, 0 0 1 0;
+}
+.table-row-cell:focused:odd {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, derive(-fx-control-inner-background,-5%);
+    -fx-background-insets: 0, 1, 2;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected, .list-view:horizontal .list-cell:filled:selected {
+    -fx-background-color: -fx-focus-color, -fx-cell-focus-inner-border, -fx-selection-bar;
+}
+
+.tab-pane .headers-region {
+    -fx-effect: dropshadow(two-pass-box, rgb(24, 31,37), 4, 0.0, 0, 0)
+}
+
+.text-field {
+    -fx-background-color: -black-dark;
+}
+
+.button {
+    -fx-text-fill: -white;
+    /* TODO: for some reason, this doesn't scale. */
+    -fx-border-style: solid;
+    -fx-border-insets: 0 1 1 0, 0 0 0 0;
+    -fx-border-width: 0.083333em, 0.083333em;
+}
