@@ -5,7 +5,6 @@ import io.rsbox.fxframe.FXFrameSkin
 import io.rsbox.mapper.gui.view.MapperView
 import javafx.scene.image.Image
 import tornadofx.*
-
 class MapperApp : FXFrameApp() {
 
     override val skin = FXFrameSkin.ARCDARK
