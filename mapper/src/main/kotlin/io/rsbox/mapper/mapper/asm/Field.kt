@@ -26,6 +26,8 @@ class Field(val group: ClassGroup, val owner: Class, val node: FieldNode) : Matc
     val readRefs = newIdentityHashSet<Method>()
     val writeRefs = newIdentityHashSet<Method>()
 
+    var hierarchyMembers = hashSetOf<Field>()
+
     /**
      * Utility methods / fields
      */

@@ -42,5 +42,7 @@ class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) : Ma
 
     val classRefs = newIdentityHashSet<Class>()
 
+    var hierarchyMembers = hashSetOf<Method>()
+
     override fun toString(): String = "${owner.name}.$name$desc"
 }

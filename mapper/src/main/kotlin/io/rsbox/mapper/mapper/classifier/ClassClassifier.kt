@@ -79,5 +79,10 @@ class ClassClassifier : AbstractClassifier<Class>() {
         private val interfaces = classifier("interfaces") { a: Class, b: Class ->
             return@classifier ClassifierUtil.compareClassSets(a.interfaces, b.interfaces)
         }
+
+        /**
+         * Implementers check
+         */
+
     }
 }
