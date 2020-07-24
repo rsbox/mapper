@@ -1,6 +1,7 @@
 package io.rsbox.mapper.mapper
 
 import io.rsbox.mapper.mapper.asm.*
+import io.rsbox.mapper.mapper.classifier.ClassClassifier
 import io.rsbox.mapper.mapper.decompile.CfrDecompiler
 import org.tinylog.kotlin.Logger
 import java.io.File
@@ -21,6 +22,18 @@ class Mapper {
      */
     lateinit var targetGroup: ClassGroup
         private set
+
+    /**
+     * Classifier singletons.
+     */
+    private val classClassifier = ClassClassifier()
+
+    init {
+        /**
+         * Initialize all classifiers
+         */
+        classClassifier.init()
+    }
 
     /**
      * Loads the Mapped JAR file.
@@ -58,6 +71,15 @@ class Mapper {
         extractor.processGroup()
 
         Logger.info("Completed loading target JAR classes. Found ${targetGroup.classes.size} classes.")
+    }
+
+    fun classifyClasses(srcGroup: ClassGroup, targetGroup: ClassGroup) {
+        Logger.info("Classifying classes between class groups.")
+
+        srcGroup.classes.forEach { srcClass ->
+            val ranking = classClassifier.rank(srcClass, targetGroup.classes.toTypedArray())
+            srcClass.rankedResults.addAll(ranking)
+        }
     }
 
     /**

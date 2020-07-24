@@ -4,7 +4,7 @@ import io.rsbox.mapper.mapper.asm.Class
 import org.objectweb.asm.Opcodes.*
 import kotlin.math.pow
 
-class ClassClassifier : AbstractClassifier<Class>() {
+class ClassClassifier : AbstractClassifier<Class>(), Ranker<Class> {
 
     override fun init() {
         addClassifier(classTypeCheck, 20)
@@ -13,6 +13,10 @@ class ClassClassifier : AbstractClassifier<Class>() {
         addClassifier(parentClass, 4)
         addClassifier(childClasses, 3)
         addClassifier(interfaces, 3)
+    }
+
+    override fun rank(src: Class, targets: Array<Class>): List<RankResult<Class>> {
+        return ClassifierUtil.rank(src, targets, classifiers, ClassifierUtil::checkPotentialEquality)
     }
 
     companion object {

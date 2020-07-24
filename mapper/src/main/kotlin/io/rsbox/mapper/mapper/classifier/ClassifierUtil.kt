@@ -1,9 +1,6 @@
 package io.rsbox.mapper.mapper.classifier
 
-import io.rsbox.mapper.mapper.asm.Class
-import io.rsbox.mapper.mapper.asm.Field
-import io.rsbox.mapper.mapper.asm.Matchable
-import io.rsbox.mapper.mapper.asm.Method
+import io.rsbox.mapper.mapper.asm.*
 import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
 import org.objectweb.asm.tree.AbstractInsnNode
 import org.objectweb.asm.tree.InsnList
@@ -180,5 +177,41 @@ object ClassifierUtil {
                 ints.add(insn.operand)
             }
         }
+    }
+
+    fun <T : Matchable<T>> rank(src: T, targets: Array<T>, classifiers: Collection<Classifier<T>>, potentialPredicate: (T, T) -> Boolean): List<RankResult<T>> {
+        val results = mutableListOf<RankResult<T>>()
+
+        targets.forEach { target ->
+            val res = rank(src, target, classifiers, potentialPredicate)
+            if(res != null) {
+                results.add(res)
+            }
+        }
+
+        results.sortByDescending { it.score }
+        return results
+    }
+
+    private fun <T : Matchable<T>> rank(src: T, target: T, classifiers: Collection<Classifier<T>>, potentialPredicate: (T, T) -> Boolean): RankResult<T>? {
+        if(!potentialPredicate(src, target)) return null
+
+        var score = 0.0
+        var mismatch = 0.0
+
+        val results = mutableListOf<ClassifierResult<T>>()
+
+        classifiers.forEach { classifier ->
+            var cScore = classifier.getScore(src, target)
+            val weight = classifier.weight
+            val weightedScore = cScore * weight
+
+            mismatch += cScore - weightedScore
+
+            score += weightedScore
+            results.add(ClassifierResult(classifier, cScore))
+        }
+
+        return RankResult(target, score, results)
     }
 }

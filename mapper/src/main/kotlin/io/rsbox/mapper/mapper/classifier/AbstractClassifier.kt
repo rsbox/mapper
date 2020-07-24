@@ -8,7 +8,7 @@ abstract class AbstractClassifier<T> {
     /**
      * Private store of classifier check types.
      */
-    private val classifiers = mutableListOf<Classifier<T>>()
+    internal val classifiers = mutableListOf<Classifier<T>>()
 
     internal fun addClassifier(classifier: Classifier<T>, weight: Int) {
         classifier.weight = weight.toDouble()

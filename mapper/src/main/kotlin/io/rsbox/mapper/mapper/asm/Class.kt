@@ -1,6 +1,7 @@
 package io.rsbox.mapper.mapper.asm
 
 import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
+import io.rsbox.mapper.mapper.classifier.RankResult
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
@@ -14,6 +15,11 @@ import java.util.ArrayDeque
 class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), Node {
 
     override val self = this
+
+    /**
+     * The target classes with calculated rank scores.
+     */
+    val rankedResults = mutableListOf<RankResult<Class>>()
 
     val name get() = node.name
 
