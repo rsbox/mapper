@@ -16,11 +16,6 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
 
     override val self = this
 
-    /**
-     * The target classes with calculated rank scores.
-     */
-    val rankedResults = mutableListOf<RankResult<Class>>()
-
     val name get() = node.name
 
     val superName get() = node.superName

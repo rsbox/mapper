@@ -202,7 +202,7 @@ object ClassifierUtil {
         val results = mutableListOf<ClassifierResult<T>>()
 
         classifiers.forEach { classifier ->
-            var cScore = classifier.getScore(src, target)
+            val cScore = classifier.getScore(src, target)
             val weight = classifier.weight
             val weightedScore = cScore * weight
 

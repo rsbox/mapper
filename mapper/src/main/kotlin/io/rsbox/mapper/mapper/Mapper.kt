@@ -2,6 +2,7 @@ package io.rsbox.mapper.mapper
 
 import io.rsbox.mapper.mapper.asm.*
 import io.rsbox.mapper.mapper.classifier.ClassClassifier
+import io.rsbox.mapper.mapper.classifier.RankResult
 import io.rsbox.mapper.mapper.decompile.CfrDecompiler
 import org.tinylog.kotlin.Logger
 import java.io.File
@@ -73,19 +74,23 @@ class Mapper {
         Logger.info("Completed loading target JAR classes. Found ${targetGroup.classes.size} classes.")
     }
 
-    fun classifyClasses(srcGroup: ClassGroup, targetGroup: ClassGroup) {
+    fun classifyClasses(srcGroup: ClassGroup, targetGroup: ClassGroup): HashMap<Class, List<RankResult<Class>>> {
         Logger.info("Classifying classes between class groups.")
 
+        val results = hashMapOf<Class, List<RankResult<Class>>>()
+
         srcGroup.classes.forEach { srcClass ->
-            val ranking = classClassifier.rank(srcClass, targetGroup.classes.toTypedArray())
-            srcClass.rankedResults.addAll(ranking)
+            val ranking = classClassifier.rank(srcClass, getPotentialClassMatches(targetGroup).toTypedArray())
+            results[srcClass] = ranking
         }
+
+        return results
     }
 
     /**
      * Gets all potential matchable classes from the [other] [ClassGroup]
      */
-    fun getPotentialClassMatches(other: ClassGroup): MutableSet<Class> {
+    private fun getPotentialClassMatches(other: ClassGroup): MutableSet<Class> {
         return other.classes.toMutableSet()
     }
 

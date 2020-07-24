@@ -40,6 +40,13 @@ class MapperView : View("Mapper") {
                 separator()
                 item("Exit").action { exitProcess(0) }
             }
+
+            menu("Rank") {
+                item("Rank All")
+                item("Rank Classes").action { mapperController.mapper.classifyClasses(mapperController.mapper.mappedGroup, mapperController.mapper.targetGroup) }
+                item("Rank Methods")
+                item("Rank Fields")
+            }
         }
 
         /**

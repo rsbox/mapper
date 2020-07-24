@@ -40,13 +40,14 @@ class ClassClassifier : AbstractClassifier<Class>(), Ranker<Class> {
 
             var clsA = a
             while(clsA.parent != null) {
-                clsA = a.parent!!
+                clsA = clsA.parent!!
                 countA++
+
             }
 
             var clsB = b
             while(clsB.parent != null) {
-                clsB = b.parent!!
+                clsB = clsB.parent!!
                 countB++
             }
 
