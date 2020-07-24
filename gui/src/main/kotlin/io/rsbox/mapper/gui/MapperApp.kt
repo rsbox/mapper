@@ -15,6 +15,12 @@ class MapperApp : FXFrameApp() {
         importStylesheet("/style.css")
     }
 
+    override fun preload() {
+        enableMoving()
+        enableResizing()
+        enableSnapping()
+    }
+
     companion object {
         /**
          * Launch the mapper FX application

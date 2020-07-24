@@ -20,7 +20,7 @@ object Library {
         const val coroutines = "1.3.8"
         const val cfr = "0.150"
         const val javaparser = "3.16.1"
-        const val framefx = "1.1.0"
+        const val framefx = "1.2.0"
     }
 
     const val tinylogApi = "org.tinylog:tinylog-api-kotlin:${Version.tinylog}"
