@@ -43,7 +43,9 @@ class MapperView : View("Mapper") {
 
             menu("Rank") {
                 item("Rank All")
-                item("Rank Classes").action { mapperController.mapper.classifyClasses(mapperController.mapper.mappedGroup, mapperController.mapper.targetGroup) }
+                item("Rank Classes").action {
+                    mapperController.classRankedResults.putAll(mapperController.mapper.classifyClasses(mapperController.mapper.mappedGroup, mapperController.mapper.targetGroup))
+                }
                 item("Rank Methods")
                 item("Rank Fields")
             }

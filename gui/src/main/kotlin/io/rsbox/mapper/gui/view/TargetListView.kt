@@ -1,5 +1,6 @@
 package io.rsbox.mapper.gui.view
 
+import io.rsbox.mapper.gui.NodeMatch
 import io.rsbox.mapper.gui.NodeSelectionModel
 import io.rsbox.mapper.gui.controller.MapperController
 import javafx.geometry.Orientation
@@ -20,8 +21,22 @@ class TargetListView : Fragment() {
         /**
          * The matched entry listview
          */
-        listview<String> {
+        listview<NodeMatch> {
+            cellFormat {
+                text = "${it.score} - ${it.name}"
+            }
+
             selectionModel.selectionMode = SelectionMode.SINGLE
+
+            sourceSelectionModel.selectedClass.onChange {
+                if(it == null) {
+                    items.removeAll()
+                }
+
+                if(controller.classRankedResults.containsKey(it)) {
+                    items.setAll(controller.classRankedResults[it]?.map { NodeMatch(it.subject, it.score, it.subject.name) })
+                }
+            }
         }
     }
 }

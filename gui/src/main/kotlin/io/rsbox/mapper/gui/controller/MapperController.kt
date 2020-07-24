@@ -5,6 +5,8 @@ import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.model.ProjectModel
 import io.rsbox.mapper.gui.view.MapperView
 import io.rsbox.mapper.mapper.Mapper
+import io.rsbox.mapper.mapper.asm.Class
+import io.rsbox.mapper.mapper.classifier.RankResult
 import javafx.beans.property.SimpleObjectProperty
 import org.tinylog.kotlin.Logger
 import tornadofx.Controller
@@ -21,6 +23,11 @@ class MapperController : Controller() {
     val mapper = Mapper()
 
     var selectedType = SimpleObjectProperty<SelectedType>()
+
+    /**
+     * Ranked result storage.
+     */
+    internal val classRankedResults = hashMapOf<Class, List<RankResult<Class>>>()
 
     private val mapperView: MapperView by inject()
 
