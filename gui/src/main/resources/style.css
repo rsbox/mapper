@@ -32,7 +32,7 @@
     -fx-dark-text-color: -white-dark;
     -fx-mid-text-color: -white;
     -fx-accent: -black-light;
-    -fx-focus-color: -blue;
+    -fx-focus-color: -black-light;
     -fx-text-base-color: -white;
 }
 
@@ -153,7 +153,7 @@
 }
 
 .tab-pane *.tab-header-background {
-    -fx-background-color: transparent, transparent, derive(-black-dark, 2%);
+    -fx-background-color: transparent, transparent, linear-gradient(to bottom, derive(-black-dark, 0%) 0%, derive(-black-dark, 3%) 80%);
 }
 
 /*******************************************************************************

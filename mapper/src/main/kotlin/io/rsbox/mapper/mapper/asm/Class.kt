@@ -5,6 +5,7 @@ import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
+import java.lang.reflect.Modifier
 import java.util.ArrayDeque
 
 /**
@@ -39,6 +40,18 @@ class Class(val group: ClassGroup, val node: ClassNode) : Matchable<Class>(), No
     val methods = node.methods.map { Method(group, this, it) }
 
     val fields = node.fields.map { Field(group, this, it) }
+
+    val initializer = methods.firstOrNull { it.isInitializer }
+
+    val constructors = methods.filter { it.isConstructor }
+
+    val staticMethods = methods.filter { Modifier.isStatic(it.access) && !it.isInitializer }
+
+    val instanceMethods = methods.filter { !Modifier.isStatic(it.access) && !it.isConstructor }
+
+    val staticFields = fields.filter { Modifier.isStatic(it.access) }
+
+    val instanceFields = fields.filter { !Modifier.isStatic(it.access) }
 
     /**
      * Reference sets
