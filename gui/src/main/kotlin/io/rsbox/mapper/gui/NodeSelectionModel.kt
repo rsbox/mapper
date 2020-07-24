@@ -11,8 +11,6 @@ import javafx.beans.property.SimpleObjectProperty
  */
 class NodeSelectionModel {
 
-    var selectedType = SimpleObjectProperty<SelectedType>()
-
     var selectedClass = SimpleObjectProperty<Class>()
 
     var selectedMethod = SimpleObjectProperty<Method>()

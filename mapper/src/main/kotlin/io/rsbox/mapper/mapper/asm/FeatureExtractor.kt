@@ -7,6 +7,7 @@ import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.tree.*
 import org.objectweb.asm.tree.AbstractInsnNode.*
 import org.tinylog.kotlin.Logger
+import java.util.*
 
 /**
  * Responsible for building feature maps for class, methods, and fields
@@ -170,6 +171,57 @@ class FeatureExtractor(val group: ClassGroup) {
                 }
             }
         }
+    }
+
+    /**
+     * Extracts the hierarchy tree of a given ASM class node.
+     */
+    private fun extractClassHierarchyMethods(clazz: Class) {
+        if(clazz.children.isNotEmpty() || clazz.interfaces.isNotEmpty()) return
+
+        val methods = hashMapOf<String, Method>()
+        val checkQueue = ArrayDeque<Class>()
+
+        checkQueue.add(clazz)
+
+        var cls: Class?
+        while(checkQueue.poll().also { cls = it } != null) {
+
+            /**
+             * Loop through the methods in the hierarchy memnbers
+             */
+            cls!!.methods.forEach { m ->
+                if(!m.isHierarchyBarrier()) return@forEach
+
+                var prev: Method? = methods[m.desc]
+                if(prev != null) {
+                    if(m.hierarchyMembers.size == 0) {
+                        m.hierarchyMembers = prev.hierarchyMembers
+                        m.hierarchyMembers.add(m)
+                    } else if(m.hierarchyMembers != prev.hierarchyMembers) {
+                        m.hierarchyMembers.addAll(prev.hierarchyMembers)
+
+                        prev.hierarchyMembers.forEach { pm ->
+                            m.hierarchyMembers = prev!!.hierarchyMembers
+                        }
+                    }
+
+                    prev = methods[m.desc]
+                } else {
+                    methods[m.desc] = m
+                    m.hierarchyMembers.add(m)
+                }
+            }
+
+            if(group[cls!!.superName] != null) checkQueue.add(group[cls!!.superName]!!)
+            checkQueue.addAll(cls!!.interfaces)
+        }
+
+        println("name: ${clazz.name} - ${methods.size}")
+    }
+
+    private fun Method.isHierarchyBarrier(): Boolean {
+        return (this.access and (ACC_PRIVATE or ACC_STATIC)) != 0
     }
 
     /**

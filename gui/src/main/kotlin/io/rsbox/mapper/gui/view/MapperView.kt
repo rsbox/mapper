@@ -1,17 +1,9 @@
 package io.rsbox.mapper.gui.view
 
 import io.rsbox.mapper.gui.NodeSelectionModel
-import io.rsbox.mapper.gui.Styles
 import io.rsbox.mapper.gui.controller.MapperController
-import io.rsbox.mapper.gui.event.MapperLoadEvent
 import io.rsbox.mapper.gui.event.ProjectCreationEvent
-import io.rsbox.mapper.mapper.asm.Class
-import io.rsbox.mapper.mapper.asm.Field
-import io.rsbox.mapper.mapper.asm.Method
-import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Orientation
-import javafx.scene.control.SelectionMode
-import javafx.scene.paint.Color
 import org.tinylog.kotlin.Logger
 import tornadofx.*
 import kotlin.system.exitProcess
@@ -48,90 +40,26 @@ class MapperView : View("Mapper") {
                 separator()
                 item("Exit").action { exitProcess(0) }
             }
+
+            menu("Rank") {
+                item("Rank All")
+                item("Rank Classes").action {
+                    mapperController.classRankedResults.putAll(mapperController.mapper.classifyClasses(mapperController.mapper.mappedGroup, mapperController.mapper.targetGroup))
+                }
+                item("Rank Methods")
+                item("Rank Fields")
+            }
         }
 
         /**
          * Source matching lists
          */
-        left = splitpane(Orientation.VERTICAL) {
-            prefWidth = 200.0
+        left = find<SourceListView>(SourceListView::nodeSelectionModel to mappedSelection).root
 
-            /**
-             * Class List
-             */
-            listview<Class> {
-                addClass(Styles.whiteDarkText)
-                cellFormat {
-                    text = it.name
-
-                    textFill = when(it.hasMatch) {
-                        false -> Color.rgb(236, 82, 82)
-                        true -> Color.rgb(93, 167, 19)
-                    }
-                }
-
-                selectionModel.selectionMode = SelectionMode.SINGLE
-
-                bindSelected(mappedSelection.selectedClass)
-
-                subscribe<MapperLoadEvent> { e ->
-                    items.setAll(e.mapper.mappedGroup.classes)
-                }
-            }
-
-            /**
-             * Method List
-             */
-            listview<Method> {
-                addClass(Styles.whiteDarkText)
-                cellFormat {
-                    text = it.name
-
-                    textFill = when(it.hasMatch) {
-                        false -> Color.rgb(236, 82, 82)
-                        true -> Color.rgb(93, 167, 19)
-                    }
-                }
-
-                selectionModel.selectionMode = SelectionMode.SINGLE
-
-                bindSelected(mappedSelection.selectedMethod)
-
-                mappedSelection.selectedClass.onChange {
-                    if(it != null) {
-                        items.setAll(it.methods)
-                    }
-                }
-
-            }
-
-            /**
-             * Field List
-             */
-            listview<Field> {
-                addClass(Styles.whiteDarkText)
-                cellFormat {
-                    text = it.name
-
-                    textFill = when(it.hasMatch) {
-                        false -> Color.rgb(236, 82, 82)
-                        true -> Color.rgb(93, 167, 19)
-                    }
-                }
-
-                selectionModel.selectionMode = SelectionMode.SINGLE
-
-                bindSelected(mappedSelection.selectedField)
-
-                mappedSelection.selectedClass.onChange {
-                    if(it != null) {
-                        items.setAll(it.fields)
-                    }
-                }
-            }
-
-            setDividerPositions(0.6, 0.8)
-        }
+        /**
+         * Target match list
+         */
+        right = find<TargetListView>(mapOf(TargetListView::sourceSelectionModel to mappedSelection, TargetListView::targetSelectionModel to mappedSelection)).root
 
         /**
          * Content Pane

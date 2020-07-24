@@ -23,6 +23,14 @@ class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) : Ma
 
     val access get() = node.access
 
+    val isInitializer: Boolean get() {
+        return this.name == INITIALIZER_NAME
+    }
+
+    val isConstructor: Boolean get() {
+        return this.name == CONSTRUCTOR_NAME
+    }
+
     /**
      * Utility methods / fields
      */
@@ -42,5 +50,12 @@ class Method(val group: ClassGroup, val owner: Class, val node: MethodNode) : Ma
 
     val classRefs = newIdentityHashSet<Class>()
 
+    var hierarchyMembers = hashSetOf<Method>()
+
     override fun toString(): String = "${owner.name}.$name$desc"
+
+    companion object {
+        private const val CONSTRUCTOR_NAME = "<init>"
+        private const val INITIALIZER_NAME = "<clinit>"
+    }
 }

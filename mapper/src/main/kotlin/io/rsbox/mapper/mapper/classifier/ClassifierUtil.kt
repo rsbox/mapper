@@ -1,8 +1,7 @@
 package io.rsbox.mapper.mapper.classifier
 
-import io.rsbox.mapper.mapper.asm.Class
-import io.rsbox.mapper.mapper.asm.Field
-import io.rsbox.mapper.mapper.asm.Method
+import io.rsbox.mapper.mapper.asm.*
+import io.rsbox.mapper.mapper.asm.util.newIdentityHashSet
 import org.objectweb.asm.tree.AbstractInsnNode
 import org.objectweb.asm.tree.InsnList
 import org.objectweb.asm.tree.IntInsnNode
@@ -62,7 +61,83 @@ object ClassifierUtil {
         return if(total == 0) 1.0 else (matched / total).toDouble()
     }
 
+    fun compareClassSets(a: MutableSet<Class>, b: MutableSet<Class>): Double {
+        return compareIdentitySets(a, b, ClassifierUtil::checkPotentialEquality)
+    }
 
+    fun compareMethodSets(a: MutableSet<Method>, b: MutableSet<Method>): Double {
+        return compareIdentitySets(a, b, ClassifierUtil::checkPotentialEquality)
+    }
+
+    fun compareFieldSets(a: MutableSet<Field>, b: MutableSet<Field>): Double {
+        return compareIdentitySets(a, b, ClassifierUtil::checkPotentialEquality)
+    }
+
+    private fun <T : Matchable<T>> compareIdentitySets(a: MutableSet<T>, b: MutableSet<T>, predicate: (T, T) -> Boolean): Double {
+        if(a.isEmpty() || b.isEmpty()) {
+            return if(a.isEmpty() && b.isEmpty()) 1.0 else 0.0
+        }
+
+        val setA = newIdentityHashSet<T>()
+        setA.addAll(a)
+
+        val setB = newIdentityHashSet<T>()
+        setB.addAll(b)
+
+        val total = setA.size + setB.size
+        var unmatched = 0
+
+        val it1 = setA.iterator()
+        while(it1.hasNext()) {
+            val node = it1.next()
+
+            if(setB.remove(node)) {
+                it1.remove()
+            } else if(node.match != null) {
+                if(!setB.remove(node.match!!)) {
+                    unmatched++
+                }
+
+                it1.remove()
+            }
+        }
+
+        val it2 = setA.iterator()
+        while(it2.hasNext()) {
+            val node = it2.next()
+
+            var found = false
+
+            setB.forEach {
+                if(predicate(node, it)) {
+                    found = true
+                    return@forEach
+                }
+            }
+
+            if(!found) {
+                unmatched++
+                it2.remove()
+            }
+        }
+
+        setB.forEach bLoop@ { rb ->
+            var found = false
+
+            setA.forEach { ra ->
+                if(predicate(ra, rb)) {
+                    found = true
+                    return@bLoop
+                }
+            }
+
+            if(!found) {
+                unmatched++
+            }
+        }
+
+        return ((total - unmatched) / total).toDouble()
+    }
 
     fun extractStrings(insnList: InsnList, out: MutableSet<String>) {
         extractStrings(insnList.iterator(), out)
@@ -102,5 +177,41 @@ object ClassifierUtil {
                 ints.add(insn.operand)
             }
         }
+    }
+
+    fun <T : Matchable<T>> rank(src: T, targets: Array<T>, classifiers: Collection<Classifier<T>>, potentialPredicate: (T, T) -> Boolean): List<RankResult<T>> {
+        val results = mutableListOf<RankResult<T>>()
+
+        targets.forEach { target ->
+            val res = rank(src, target, classifiers, potentialPredicate)
+            if(res != null) {
+                results.add(res)
+            }
+        }
+
+        results.sortByDescending { it.score }
+        return results
+    }
+
+    private fun <T : Matchable<T>> rank(src: T, target: T, classifiers: Collection<Classifier<T>>, potentialPredicate: (T, T) -> Boolean): RankResult<T>? {
+        if(!potentialPredicate(src, target)) return null
+
+        var score = 0.0
+        var mismatch = 0.0
+
+        val results = mutableListOf<ClassifierResult<T>>()
+
+        classifiers.forEach { classifier ->
+            val cScore = classifier.getScore(src, target)
+            val weight = classifier.weight
+            val weightedScore = cScore * weight
+
+            mismatch += cScore - weightedScore
+
+            score += weightedScore
+            results.add(ClassifierResult(classifier, cScore))
+        }
+
+        return RankResult(target, score, results)
     }
 }
